@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактор кода с языками</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: #2d2d2d;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #61dafb;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .controls label {
+            font-weight: bold;
+            font-size: 14px;
+            min-width: 80px;
+        }
+        .controls input {
+            padding: 8px 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            font-size: 14px;
+            flex: 1;
+            min-width: 80px;
+        }
+        .controls input:focus {
+            outline: 2px solid #61dafb;
+            border-color: transparent;
+        }
+        #fileExtension {
+            flex: 0.5;
+            min-width: 60px;
+        }
+        textarea {
+            width: 100%;
+            height: 350px;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        textarea:focus {
+            outline: 2px solid #61dafb;
+            border-color: transparent;
+        }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            background: #61dafb;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: #4fc3f7;
+        }
+        .btn.download {
+            background: #4caf50;
+        }
+        .btn.download:hover {
+            background: #66bb6a;
+        }
+        .lang-select {
+            padding: 8px 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .lang-select:focus {
+            outline: 2px solid #61dafb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="title">Code Editor</h1>
+
+    <!-- Выбор языка интерфейса -->
+    <div style="text-align: right; margin-bottom: 15px;">
+        <label for="langSelector" id="langLabel">Language:</label>
+        <select id="langSelector" class="lang-select">
+            <option value="en">English</option>
+            <option value="ru" selected>Русский</option>
+            <option value="es">Español</option>
+        </select>
+    </div>
+
+    <div class="controls">
+        <div style="flex:1; min-width:150px;">
+            <label for="fileName" id="nameLabel">File name:</label>
+            <input type="text" id="fileName" value="my_script">
+        </div>
+        <div style="flex:0.7; min-width:80px;">
+            <label for="fileExtension" id="extLabel">Extension:</label>
+            <input type="text" id="fileExtension" value=".txt" placeholder=".js, .py, .html...">
+        </div>
+    </div>
+
+    <textarea id="codeArea" placeholder="Write your code here..."></textarea>
+
+    <div class="btn-row">
+        <button class="btn" id="clearBtn">Clear</button>
+        <button class="btn download" id="downloadBtn">Download</button>
+    </div>
+</div>
+
+<script>
+    // Словари перевода для интерфейса
+    const translations = {
+        en: {
+            title: "Code Editor",
+            langLabel: "Language:",
+            nameLabel: "File name:",
+            extLabel: "Extension:",
+            placeholder: "Write your code here...",
+            clearBtn: "Clear",
+            downloadBtn: "Download"
+        },
+        ru: {
+            title: "Редактор кода",
+            langLabel: "Язык:",
+            nameLabel: "Имя файла:",
+            extLabel: "Расширение:",
+            placeholder: "Введите ваш код здесь...",
+            clearBtn: "Очистить",
+            downloadBtn: "Скачать"
+        },
+        es: {
+            title: "Editor de código",
+            langLabel: "Idioma:",
+            nameLabel: "Nombre del archivo:",
+            extLabel: "Extensión:",
+            placeholder: "Escribe tu código aquí...",
+            clearBtn: "Limpiar",
+            downloadBtn: "Descargar"
+        }
+    };
+
+    // Получаем элементы
+    const langSelector = document.getElementById('langSelector');
+    const title = document.getElementById('title');
+    const langLabel = document.getElementById('langLabel');
+    const nameLabel = document.getElementById('nameLabel');
+    const extLabel = document.getElementById('extLabel');
+    const codeArea = document.getElementById('codeArea');
+    const clearBtn = document.getElementById('clearBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const fileNameInput = document.getElementById('fileName');
+    const fileExtInput = document.getElementById('fileExtension');
+
+    // Функция для смены языка
+    function updateLanguage(lang) {
+        const t = translations[lang];
+        if (t) {
+            title.textContent = t.title;
+            langLabel.textContent = t.langLabel;
+            nameLabel.textContent = t.nameLabel;
+            extLabel.textContent = t.extLabel;
+            codeArea.placeholder = t.placeholder;
+            clearBtn.textContent = t.clearBtn;
+            downloadBtn.textContent = t.downloadBtn;
+        }
+    }
+
+    // Слушаем изменение языка
+    langSelector.addEventListener('change', function() {
+        updateLanguage(this.value);
+    });
+
+    // Очистить поле
+    clearBtn.addEventListener('click', function() {
+        codeArea.value = '';
+    });
+
+    // Скачать файл
+    downloadBtn.addEventListener('click', function() {
+        let fileName = fileNameInput.value.trim();
+        let fileExt = fileExtInput.value.trim();
+
+        // Если имя пустое, ставим по умолчанию
+        if (fileName === '') fileName = 'file';
+        
+        // Если расширение пустое, ставим .txt
+        if (fileExt === '') fileExt = '.txt';
+        
+        // Если расширение не начинается с точки, добавляем её
+        if (!fileExt.startsWith('.')) fileExt = '.' + fileExt;
+
+        const fullName = fileName + fileExt;
+        const content = codeArea.value;
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fullName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    });
+
+    // Устанавливаем русский язык по умолчанию при загрузке
+    updateLanguage('ru');
+</script>
+
+</body>
+</html>
