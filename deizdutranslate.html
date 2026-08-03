@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeIzDu Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0f0f0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 1px solid #2a2a2a;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+        }
+        h1 span {
+            color: #4285f4;
+        }
+        .lang-selector {
+            display: flex;
+            gap: 6px;
+            background: #262626;
+            padding: 4px;
+            border-radius: 10px;
+        }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            color: #fff;
+        }
+        .lang-btn.active {
+            background: #4285f4;
+            color: #fff;
+        }
+        .input-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            flex: 1;
+            background: #262626;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+        textarea::placeholder {
+            color: #777;
+        }
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        select {
+            background: #262626;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            flex: 1;
+            min-width: 120px;
+        }
+        select:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+        button {
+            background: #4285f4;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 28px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            flex: 1;
+            min-width: 100px;
+        }
+        button:hover {
+            background: #3367d6;
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .swap-btn {
+            background: #333;
+            flex: 0 0 44px;
+            padding: 0;
+            min-width: 44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        .swap-btn:hover {
+            background: #444;
+        }
+        #result {
+            background: #262626;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            font-size: 16px;
+            min-height: 100px;
+            margin-top: 10px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .status {
+            margin-top: 15px;
+            color: #888;
+            font-size: 13px;
+            text-align: center;
+        }
+        .status.error {
+            color: #ea4335;
+        }
+        .status.success {
+            color: #34a853;
+        }
+        @media (max-width: 500px) {
+            .card { padding: 20px; }
+            .header { flex-direction: column; align-items: stretch; }
+            .lang-selector { align-self: flex-start; }
+            .controls { flex-direction: column; }
+            button { min-width: 100%; }
+            .swap-btn { flex: 1; min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>🔤 <span>DeIzDu</span> Translator</h1>
+            <div class="lang-selector">
+                <button class="lang-btn" data-lang="en" id="langEn">EN</button>
+                <button class="lang-btn" data-lang="ru" id="langRu">RU</button>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <textarea id="sourceText" placeholder="Enter text to translate..."></textarea>
+        </div>
+
+        <div class="controls">
+            <select id="sourceLang">
+                <option value="auto">Detect language</option>
+                <option value="ru">Russian</option>
+                <option value="en" selected>English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+                <option value="pt">Portuguese</option>
+                <option value="zh-CN">Chinese</option>
+                <option value="ja">Japanese</option>
+                <option value="ko">Korean</option>
+                <option value="ar">Arabic</option>
+                <option value="hi">Hindi</option>
+            </select>
+            
+            <button class="swap-btn" id="swapBtn" title="Swap languages">⇄</button>
+            
+            <select id="targetLang">
+                <option value="en" selected>English</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+                <option value="pt">Portuguese</option>
+                <option value="zh-CN">Chinese</option>
+                <option value="ja">Japanese</option>
+                <option value="ko">Korean</option>
+                <option value="ar">Arabic</option>
+                <option value="hi">Hindi</option>
+            </select>
+        </div>
+
+        <button id="translateBtn">Translate</button>
+
+        <div id="result">Translation will appear here...</div>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        // ============ GOOGLE TRANSLATE API ============
+        const API_URL = 'https://translate.googleapis.com/translate_a/single';
+
+        // ============ ЭЛЕМЕНТЫ ============
+        const sourceText = document.getElementById('sourceText');
+        const resultDiv = document.getElementById('result');
+        const translateBtn = document.getElementById('translateBtn');
+        const sourceLang = document.getElementById('sourceLang');
+        const targetLang = document.getElementById('targetLang');
+        const swapBtn = document.getElementById('swapBtn');
+        const statusDiv = document.getElementById('status');
+        const langEn = document.getElementById('langEn');
+        const langRu = document.getElementById('langRu');
+
+        // ============ ПЕРЕВОДЫ ============
+        const translations = {
+            en: {
+                title: '🔤 <span>DeIzDu</span> Translator',
+                placeholder: 'Enter text to translate...',
+                detect: 'Detect language',
+                languages: {
+                    ru: 'Russian',
+                    en: 'English',
+                    es: 'Spanish',
+                    fr: 'French',
+                    de: 'German',
+                    it: 'Italian',
+                    pt: 'Portuguese',
+                    'zh-CN': 'Chinese',
+                    ja: 'Japanese',
+                    ko: 'Korean',
+                    ar: 'Arabic',
+                    hi: 'Hindi',
+                    auto: 'Detect language'
+                },
+                translateBtn: 'Translate',
+                swapTitle: 'Swap languages',
+                resultPlaceholder: 'Translation will appear here...',
+                statusEmpty: '',
+                statusTranslating: '⏳ Translating...',
+                statusDone: '✅ Done!',
+                statusEnterText: '⚠️ Enter text to translate',
+                statusError: '❌ Error: {message}',
+                resultError: 'Translation error. Try again later.'
+            },
+            ru: {
+                title: '🔤 <span>DeIzDu</span> Переводчик',
+                placeholder: 'Введите текст для перевода...',
+                detect: 'Определить язык',
+                languages: {
+                    ru: 'Русский',
+                    en: 'Английский',
+                    es: 'Испанский',
+                    fr: 'Французский',
+                    de: 'Немецкий',
+                    it: 'Итальянский',
+                    pt: 'Португальский',
+                    'zh-CN': 'Китайский',
+                    ja: 'Японский',
+                    ko: 'Корейский',
+                    ar: 'Арабский',
+                    hi: 'Хинди',
+                    auto: 'Определить язык'
+                },
+                translateBtn: 'Перевести',
+                swapTitle: 'Поменять языки',
+                resultPlaceholder: 'Перевод появится здесь...',
+                statusEmpty: '',
+                statusTranslating: '⏳ Переводим...',
+                statusDone: '✅ Готово!',
+                statusEnterText: '⚠️ Введите текст для перевода',
+                statusError: '❌ Ошибка: {message}',
+                resultError: 'Ошибка перевода. Попробуйте позже.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        // ============ СМЕНА ЯЗЫКА ============
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('deizdu_lang', lang);
+            
+            // Обновляем кнопки
+            langEn.classList.toggle('active', lang === 'en');
+            langRu.classList.toggle('active', lang === 'ru');
+            
+            const t = translations[lang];
+            
+            // Заголовок
+            document.querySelector('h1').innerHTML = t.title;
+            
+            // Плейсхолдер
+            sourceText.placeholder = t.placeholder;
+            
+            // Кнопка перевода
+            translateBtn.textContent = t.translateBtn;
+            
+            // Подсказка кнопки смены
+            swapBtn.title = t.swapTitle;
+            
+            // Результат
+            resultDiv.textContent = t.resultPlaceholder;
+            
+            // Статус
+            statusDiv.textContent = t.statusEmpty;
+            statusDiv.className = 'status';
+            
+            // Обновляем языки в выпадающих списках
+            updateLanguageOptions();
+            
+            // Если есть текст — переводим
+            if (sourceText.value.trim()) {
+                translateText();
+            }
+        }
+
+        function updateLanguageOptions() {
+            const t = translations[currentLang];
+            
+            // Сохраняем выбранные значения
+            const srcVal = sourceLang.value;
+            const tgtVal = targetLang.value;
+            
+            // Обновляем опции
+            sourceLang.innerHTML = '';
+            targetLang.innerHTML = '';
+            
+            // Список языков: auto + все остальные
+            const langs = ['auto', 'ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh-CN', 'ja', 'ko', 'ar', 'hi'];
+            
+            langs.forEach(code => {
+                const opt1 = document.createElement('option');
+                opt1.value = code;
+                opt1.textContent = t.languages[code] || code;
+                sourceLang.appendChild(opt1);
+                
+                const opt2 = document.createElement('option');
+                opt2.value = code;
+                opt2.textContent = t.languages[code] || code;
+                targetLang.appendChild(opt2);
+            });
+            
+            // Восстанавливаем выбранные значения
+            if ([...sourceLang.options].some(o => o.value === srcVal)) {
+                sourceLang.value = srcVal;
+            } else {
+                sourceLang.value = 'auto';
+            }
+            
+            if ([...targetLang.options].some(o => o.value === tgtVal)) {
+                targetLang.value = tgtVal;
+            } else {
+                targetLang.value = currentLang === 'en' ? 'en' : 'ru';
+            }
+        }
+
+        // ============ ПЕРЕВОД ============
+        async function translateText() {
+            const text = sourceText.value.trim();
+            const t = translations[currentLang];
+            
+            if (!text) {
+                statusDiv.textContent = t.statusEnterText;
+                statusDiv.className = 'status error';
+                return;
+            }
+
+            const from = sourceLang.value;
+            const to = targetLang.value;
+
+            translateBtn.disabled = true;
+            translateBtn.textContent = t.translateBtn + '...';
+            statusDiv.textContent = t.statusTranslating;
+            statusDiv.className = 'status';
+
+            try {
+                const url = `${API_URL}?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data && data[0] && data[0][0]) {
+                    const translation = data[0].map(part => part[0]).join('');
+                    resultDiv.textContent = translation;
+                    statusDiv.textContent = t.statusDone;
+                    statusDiv.className = 'status success';
+                } else {
+                    throw new Error('Unexpected response format');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.textContent = t.resultError;
+                statusDiv.textContent = t.statusError.replace('{message}', error.message);
+                statusDiv.className = 'status error';
+            } finally {
+                translateBtn.disabled = false;
+                translateBtn.textContent = t.translateBtn;
+            }
+        }
+
+        // ============ СМЕНА ЯЗЫКОВ МЕСТАМИ ============
+        function swapLanguages() {
+            const temp = sourceLang.value;
+            sourceLang.value = targetLang.value;
+            targetLang.value = temp;
+            
+            if (sourceLang.value === 'auto') {
+                sourceLang.value = currentLang === 'en' ? 'en' : 'ru';
+            }
+            if (targetLang.value === 'auto') {
+                targetLang.value = currentLang === 'en' ? 'ru' : 'en';
+            }
+            
+            if (sourceText.value.trim()) {
+                translateText();
+            }
+        }
+
+        // ============ ОБРАБОТЧИКИ ============
+        translateBtn.addEventListener('click', translateText);
+        swapBtn.addEventListener('click', swapLanguages);
+        
+        sourceText.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                translateText();
+            }
+        });
+
+        sourceLang.addEventListener('change', () => {
+            if (sourceText.value.trim()) translateText();
+        });
+        targetLang.addEventListener('change', () => {
+            if (sourceText.value.trim()) translateText();
+        });
+
+        langEn.addEventListener('click', () => setLanguage('en'));
+        langRu.addEventListener('click', () => setLanguage('ru'));
+
+        // ============ ЗАГРУЗКА ============
+        const savedLang = localStorage.getItem('deizdu_lang') || 'en';
+        setLanguage(savedLang);
+        
+        console.log('✅ DeIzDu Translator ready!');
+    </script>
+</body>
+</html>
