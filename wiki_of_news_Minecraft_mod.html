@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEWS Mod — Wiki</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: #2d2d2d;
+            padding: 25px 30px;
+            border-radius: 12px;
+            border-left: 6px solid #4a9eff;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 {
+            font-size: 2.4rem;
+            color: #4a9eff;
+            letter-spacing: 2px;
+        }
+        header .sub {
+            color: #aaa;
+            font-size: 1rem;
+            background: #3a3a3a;
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        .badge-mod {
+            background: #4a9eff;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+        }
+        .sidebar {
+            background: #252525;
+            border-radius: 12px;
+            padding: 20px 15px;
+            height: fit-content;
+            border: 1px solid #3a3a3a;
+        }
+        .sidebar h3 {
+            color: #4a9eff;
+            border-bottom: 1px solid #3a3a3a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            padding: 6px 0;
+            border-bottom: 1px solid #2f2f2f;
+        }
+        .sidebar a {
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar a:hover {
+            color: #4a9eff;
+            padding-left: 6px;
+        }
+        .main {
+            background: #222;
+            border-radius: 12px;
+            padding: 25px 30px;
+            border: 1px solid #333;
+        }
+        .main h2 {
+            color: #4a9eff;
+            font-size: 2rem;
+            border-bottom: 2px solid #3a3a3a;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .category {
+            margin-bottom: 40px;
+        }
+        .category h3 {
+            color: #b8b8b8;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .category h3 small {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: normal;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 16px 14px;
+            border-left: 4px solid #4a9eff;
+            transition: 0.2s;
+        }
+        .card:hover {
+            background: #303030;
+            transform: translateY(-2px);
+        }
+        .card .name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .card .type {
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card .desc {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            border-top: 1px solid #3a3a3a;
+            padding-top: 8px;
+        }
+        .card .note {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #f5b042;
+            background: #2f2a1a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .special {
+            border-left-color: #f5b042;
+        }
+        .warning {
+            background: #3a1a1a;
+            border-left-color: #ff5555;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+        @media (max-width: 700px) {
+            .wiki-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>NEWS Mod</h1>
+            <div class="sub">New Building Items</div>
+        </div>
+        <div class="badge-mod">Creative Tab</div>
+    </header>
+
+    <div class="wiki-grid">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h3>Contents</h3>
+            <ul>
+                <li><a href="#wood">Wood &amp; Doors</a></li>
+                <li><a href="#glass">Glass &amp; Wool</a></li>
+                <li><a href="#bluestone">Bluestone</a></li>
+                <li><a href="#storage">Storage &amp; Security</a></li>
+                <li><a href="#special">Special Blocks</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <h2>All Items &amp; Blocks</h2>
+            <p style="margin-bottom: 20px; color: #aaa;">All items are available in the <strong>NEWS Creative Tab</strong>. Russian language support is included.</p>
+
+            <!-- WOOD & DOORS -->
+            <section class="category" id="wood">
+                <h3>Wood &amp; Doors</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="name">New Oak Door</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Oak trapdoor with a circular glass window in the center.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Oak Bricks</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Made from oak planks, but with a brick-style texture.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Oak Brick</div>
+                        <div class="type">Item</div>
+                        <div class="desc">Crafting ingredient for Oak Bricks block.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GLASS & WOOL -->
+            <section class="category" id="glass">
+                <h3>Glass &amp; Wool</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="name">Dark Red Glass Pane</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Thin dark red glass pane. (Pane version)</div>
+                    </div>
+                    <div class="card special">
+                        <div class="name">Dark Red Glass Block</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Full dark red glass block. <strong>Not a pane</strong> — this is a solid block.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Dark Red Wool</div>
+                        <div class="type">Block</div>
+                        <div class="desc">New wool color: dark red wool block.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BLUESTONE -->
+            <section class="category" id="bluestone">
+                <h3>Bluestone</h3>
+                <div class="card-grid">
+                    <div class="card special">
+                        <div class="name">Bluestone Dust</div>
+                        <div class="type">Item</div>
+                        <div class="desc">Decorative item only. <strong>Not</strong> a redstone analogue — does not conduct power.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Bluestone Block</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Solid block made from Bluestone Dust. Decorative.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Bluestone Ore</div>
+                        <div class="type">Block</div>
+                        <div class="desc">New stone-type ore block. Drops Bluestone Dust.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STORAGE & SECURITY -->
+            <section class="category" id="storage">
+                <h3>Storage &amp; Security</h3>
+                <div class="card-grid">
+                    <div class="card warning">
+                        <div class="name">Safe Door</div>
+                        <div class="type">Block</div>
+                        <div class="desc"><strong>IMPORTANT:</strong> This door does NOT open! It is a solid, safe door that cannot be interacted with.</div>
+                    </div>
+                    <div class="card">
+                        <div class="name">Save</div>
+                        <div class="type">Block</div>
+                        <div class="desc">Mini chest. Compact storage container.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SPECIAL BLOCKS -->
+            <section class="category" id="special">
+                <h3>Special Blocks</h3>
+                <div class="card-grid">
+                    <div class="card warning">
+                        <div class="name">Blockcreate</div>
+                        <div class="type">Block</div>
+                        <div class="desc"><strong>Bug block!</strong> This block has no crafting recipe — it cannot be crafted!</div>
+                        <div class="note">⚠️ Only obtainable via creative or commands</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                NEWS Mod Wiki — All items are in the Creative Tab. Russian language supported.
+            </div>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
